@@ -1,18 +1,18 @@
 #include "defs.h"
+#include "warshall.h"
 
-transitive_closure(R, n)
-unsigned *R;
-int n;
+void
+transitive_closure(unsigned* R, int n)
 {
-    register int rowsize;
-    register unsigned i;
-    register unsigned *rowj;
-    register unsigned *rp;
-    register unsigned *rend;
-    register unsigned *ccol;
-    register unsigned *relend;
-    register unsigned *cword;
-    register unsigned *rowi;
+    int rowsize;
+    unsigned i;
+    unsigned *rowj;
+    unsigned *rp;
+    unsigned *rend;
+    unsigned *ccol;
+    unsigned *relend;
+    unsigned *cword;
+    unsigned *rowi;
 
     rowsize = WORDSIZE(n);
     relend = R + n*rowsize;
@@ -22,44 +22,43 @@ int n;
     rowi = R;
     while (rowi < relend)
     {
-	ccol = cword;
-	rowj = R;
+        ccol = cword;
+        rowj = R;
 
-	while (rowj < relend)
-	{
-	    if (*ccol & (1 << i))
-	    {
-		rp = rowi;
-		rend = rowj + rowsize;
-		while (rowj < rend)
-		    *rowj++ |= *rp++;
-	    }
-	    else
-	    {
-		rowj += rowsize;
-	    }
+        while (rowj < relend)
+        {
+            if (*ccol & (1 << i))
+            {
+                rp = rowi;
+                rend = rowj + rowsize;
+                while (rowj < rend)
+                    *rowj++ |= *rp++;
+            }
+            else
+            {
+                rowj += rowsize;
+            }
 
-	    ccol += rowsize;
-	}
+            ccol += rowsize;
+        }
 
-	if (++i >= BITS_PER_WORD)
-	{
-	    i = 0;
-	    cword++;
-	}
+        if (++i >= BITS_PER_WORD)
+        {
+            i = 0;
+            cword++;
+        }
 
-	rowi += rowsize;
+        rowi += rowsize;
     }
 }
 
-reflexive_transitive_closure(R, n)
-unsigned *R;
-int n;
+void
+reflexive_transitive_closure(unsigned* R, int n)
 {
-    register int rowsize;
-    register unsigned i;
-    register unsigned *rp;
-    register unsigned *relend;
+    int rowsize;
+    unsigned i;
+    unsigned *rp;
+    unsigned *relend;
 
     transitive_closure(R, n);
 
@@ -70,13 +69,13 @@ int n;
     rp = R;
     while (rp < relend)
     {
-	*rp |= (1 << i);
-	if (++i >= BITS_PER_WORD)
-	{
-	    i = 0;
-	    rp++;
-	}
+        *rp |= (1 << i);
+        if (++i >= BITS_PER_WORD)
+        {
+            i = 0;
+            rp++;
+        }
 
-	rp += rowsize;
+        rp += rowsize;
     }
 }

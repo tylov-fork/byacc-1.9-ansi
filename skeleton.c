@@ -1,21 +1,21 @@
 #include "defs.h"
 
-/*  The definition of yysccsid in the banner should be replaced with	*/
-/*  a #pragma ident directive if the target C compiler supports		*/
-/*  #pragma ident directives.						*/
-/*									*/
-/*  If the skeleton is changed, the banner should be changed so that	*/
-/*  the altered version can be easily distinguished from the original.	*/
-/*									*/
-/*  The #defines included with the banner are there because they are	*/
-/*  useful in subsequent code.  The macros #defined in the header or	*/
-/*  the body either are not useful outside of semantic actions or	*/
-/*  are conditional.							*/
+/*  The definition of yysccsid in the banner should be replaced with        */
+/*  a #pragma ident directive if the target C compiler supports                */
+/*  #pragma ident directives.                                                */
+/*                                                                        */
+/*  If the skeleton is changed, the banner should be changed so that        */
+/*  the altered version can be easily distinguished from the original.        */
+/*                                                                        */
+/*  The #defines included with the banner are there because they are        */
+/*  useful in subsequent code.  The macros #defined in the header or        */
+/*  the body either are not useful outside of semantic actions or        */
+/*  are conditional.                                                        */
 
 char *banner[] =
 {
     "#ifndef lint",
-    "static char yysccsid[] = \"@(#)yaccpar	1.9 (Berkeley) 02/21/93\";",
+    "static char yysccsid[] = \"@(#)yaccpar        1.9 (Berkeley) 02/21/93\";",
     "#endif",
     "#define YYBYACC 1",
     "#define YYMAJOR 1",
@@ -83,9 +83,9 @@ char *body[] =
     "int",
     "yyparse()",
     "{",
-    "    register int yym, yyn, yystate;",
+    "    int yym, yyn, yystate;",
     "#if YYDEBUG",
-    "    register char *yys;",
+    "    char *yys;",
     "    extern char *getenv();",
     "",
     "    if (yys = getenv(\"YYDEBUG\"))",
@@ -283,24 +283,23 @@ char *trailer[] =
     0
 };
 
-
-write_section(section)
-char *section[];
+void
+write_section(char* section[])
 {
-    register int c;
-    register int i;
-    register char *s;
-    register FILE *f;
+    int c;
+    int i;
+    char *s;
+    FILE *f;
 
     f = code_file;
     for (i = 0; s = section[i]; ++i)
     {
-	++outline;
-	while (c = *s)
-	{
-	    putc(c, f);
-	    ++s;
-	}
-	putc('\n', f);
+        ++outline;
+        while (c = *s)
+        {
+            putc(c, f);
+            ++s;
+        }
+        putc('\n', f);
     }
 }
