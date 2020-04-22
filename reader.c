@@ -1132,7 +1132,7 @@ insert_empty_rule(void)
         expand_items();
     bpp = pitem + nitems - 1;
     *bpp-- = bp;
-    while (bpp[0] = bpp[-1]) --bpp;
+    while ((bpp[0] = bpp[-1])) --bpp;
 
     if (++nrules >= maxrules)
         expand_rules();
@@ -1403,7 +1403,7 @@ int
 mark_symbol(void)
 {
     int c;
-    bucket *bp;
+    bucket *bp = (bucket *)0;
 
     c = cptr[1];
     if (c == '%' || c == '\\')
@@ -1509,7 +1509,7 @@ pack_names(void)
     {
         p = t;
         s = bp->name;
-        while (*t++ = *s++) continue;
+        while ((*t++ = *s++)) continue;
         FREE(bp->name);
         bp->name = p;
     }
@@ -1720,7 +1720,7 @@ void
 print_grammar(void)
 {
     int i, j, k;
-    int spacing;
+    int spacing = 0;
     FILE *f = verbose_file;
 
     if (!vflag) return;

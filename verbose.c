@@ -94,7 +94,7 @@ print_state(int state)
 void
 print_conflicts(int state)
 {
-    int symbol, act, number;
+    int symbol, act = SHIFT, number = 0;
     action *p;
 
     symbol = -1;

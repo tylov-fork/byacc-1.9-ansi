@@ -2,13 +2,15 @@ DEST	      = .
 
 HDRS	      = defs.h
 
-CFLAGS	      = -O -DNDEBUG
+CFLAGS	      = -Wall -O2 -DNDEBUG
 
 LDFLAGS	      =
 
 LIBS	      =
 
-LINKER	      = cc
+CC            = gcc
+LINKER	      = $(CC)
+EXE	          = .exe
 
 MAKEFILE      = Makefile
 
@@ -27,7 +29,8 @@ OBJS	      = closure.o \
 
 PRINT	      = pr -f -l88
 
-PROGRAM	      = yacc
+
+PROGRAM	      = yacc$(EXE)
 
 SRCS	      = closure.c \
 		error.c \
@@ -44,9 +47,11 @@ SRCS	      = closure.c \
 
 all:		$(PROGRAM)
 
+
 $(PROGRAM):     $(OBJS) $(LIBS)
 		@echo -n "Loading $(PROGRAM) ... "
 		@$(LINKER) $(LDFLAGS) -o $(PROGRAM) $(OBJS) $(LIBS)
+		strip $(PROGRAM)
 		@echo "done"
 
 clean:;		@rm -f $(OBJS)
@@ -69,16 +74,17 @@ program:        $(PROGRAM)
 
 tags:           $(HDRS) $(SRCS); @ctags $(HDRS) $(SRCS)
 
-###
-closure.o: defs.h
-error.o: defs.h
-lalr.o: defs.h
-lr0.o: defs.h
-main.o: defs.h
-mkpar.o: defs.h
-output.o: defs.h
-reader.o: defs.h
+# DO NOT DELETE
+
+closure.o: defs.h warshall.h closure.h
+error.o: defs.h error.h
+lalr.o: defs.h error.h lr0.h lalr.h
+lr0.o: defs.h closure.h error.h lr0.h
+main.o: defs.h error.h reader.h lr0.h lalr.h mkpar.h verbose.h output.h
+mkpar.o: defs.h error.h lr0.h lalr.h mkpar.h
+output.o: defs.h error.h skeleton.h lr0.h lalr.h mkpar.h reader.h output.h
+reader.o: defs.h error.h skeleton.h symtab.h reader.h
 skeleton.o: defs.h
-symtab.o: defs.h
-verbose.o: defs.h
-warshall.o: defs.h
+symtab.o: defs.h error.h
+verbose.o: defs.h error.h lr0.h lalr.h mkpar.h verbose.h
+warshall.o: defs.h warshall.h

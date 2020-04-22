@@ -195,11 +195,12 @@ unused_rules(void)
     for (i = 3; i < nrules; ++i)
         if (!rules_used[i]) ++nunused;
 
-    if (nunused)
+    if (nunused) {
         if (nunused == 1)
             fprintf(stderr, "%s: 1 rule never reduced\n", myname);
         else
             fprintf(stderr, "%s: %d rules never reduced\n", myname, nunused);
+    }
 }
 
 void
@@ -207,7 +208,7 @@ remove_conflicts(void)
 {
     int i;
     int symbol;
-    action *p, *pref;
+    action *p, *pref = (action *)0;
 
     SRtotal = 0;
     RRtotal = 0;
@@ -230,7 +231,7 @@ remove_conflicts(void)
                 SRcount++;
                 p->suppressed = 1;
             }
-            else if (pref->action_code == SHIFT)
+            else if (pref && pref->action_code == SHIFT)
             {
                 if (pref->prec > 0 && p->prec > 0)
                 {

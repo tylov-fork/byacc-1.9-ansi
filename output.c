@@ -768,7 +768,7 @@ is_C_identifier(char* name)
 
     if (!isalpha(c) && c != '_' && c != '$')
         return (0);
-    while (c = *++s)
+    while ((c = *++s))
     {
         if (!isalnum(c) && c != '_' && c != '$')
             return (0);
@@ -805,7 +805,7 @@ output_defines(void)
                     putc(c, code_file);
                     if (dflag) putc(c, defines_file);
                 }
-                while (c = *++s);
+                while ((c = *++s));
             }
             ++outline;
             fprintf(code_file, " %d\n", symbol_value[i]);
@@ -893,7 +893,7 @@ output_debug(void)
     j = 80;
     for (i = 0; i <= max; ++i)
     {
-        if (s = symnam[i])
+        if ((s = symnam[i]))
         {
             if (s[0] == '"')
             {
