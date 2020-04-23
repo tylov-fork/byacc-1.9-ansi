@@ -547,9 +547,25 @@ declaration_list
 
 %%
 #include <stdio.h>
+#include<ctype.h>
 
-void yyerror(const char *s)
+#include"lex.yy.c"
+
+void yyerror(const char *s) {
+    printf("%d : %s %s\n", yylineno, s, yytext );
+}
+
+int yyparse(void);
+
+int main(int argc, char *argv[])
 {
-	fflush(stdout);
-	fprintf(stderr, "*** %s\n", s);
+    yyin = fopen(argv[1], "r");
+    
+   if(!yyparse())
+        printf("\nParsing complete\n");
+    else
+        printf("\nParsing failed\n");
+    
+    fclose(yyin);
+    return 0;
 }
