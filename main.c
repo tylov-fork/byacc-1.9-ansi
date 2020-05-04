@@ -233,6 +233,7 @@ create_file_names(void)
     char *tmpdir;
 
     tmpdir = getenv("TMPDIR");
+    if (tmpdir == 0) tmpdir = getenv("TEMP");
     if (tmpdir == 0) tmpdir = "/tmp";
 
     len = strlen(tmpdir);
