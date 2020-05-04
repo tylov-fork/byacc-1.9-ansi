@@ -18,14 +18,14 @@
 /*  from r (0-indexed)                                  */
 /*  SETBIT sets the n-th bit starting from r            */
 
-#define MAXCHAR                    255
-#define MAXSHORT            32767
-#define MINSHORT            -32768
-#define MAXTABLE            32500
-#define BITS_PER_WORD        32
-#define WORDSIZE(n)            (((n)+(BITS_PER_WORD-1))/BITS_PER_WORD)
-#define BIT(r, n)            ((((r)[(n)>>5])>>((n)&31))&1)
-#define SETBIT(r, n)        ((r)[(n)>>5]|=((unsigned)1<<((n)&31)))
+#define MAXCHAR           255
+#define MAXSHORT          32767
+#define MINSHORT          -32768
+#define MAXTABLE          32500
+#define BITS_PER_WORD     32
+#define WORDSIZE(n)       (((n)+(BITS_PER_WORD-1))/BITS_PER_WORD)
+#define BIT(r, n)         ((((r)[(n)>>5])>>((n)&31))&1)
+#define SETBIT(r, n)      ((r)[(n)>>5]|=((unsigned)1<<((n)&31)))
 
 
 /*  character names  */
@@ -85,25 +85,25 @@
 
 /*  character macros  */
 
-#define IS_IDENT(c)        (isalnum(c) || (c) == '_' || (c) == '.' || (c) == '$')
-#define IS_OCTAL(c)        ((c) >= '0' && (c) <= '7')
-#define NUMERIC_VALUE(c)        ((c) - '0')
+#define IS_IDENT(c)       (isalnum(c) || (c) == '_' || (c) == '.' || (c) == '$')
+#define IS_OCTAL(c)       ((c) >= '0' && (c) <= '7')
+#define NUMERIC_VALUE(c)  ((c) - '0')
 
 
 /*  symbol macros  */
 
 #define ISTOKEN(s)        ((s) < start_symbol)
-#define ISVAR(s)        ((s) >= start_symbol)
+#define ISVAR(s)          ((s) >= start_symbol)
 
 
 /*  storage allocation macros  */
 
-#define CALLOC(k,n)        (calloc((unsigned)(k),(unsigned)(n)))
-#define FREE(x)                (free((char*)(x)))
-#define MALLOC(n)        (malloc((unsigned)(n)))
-#define NEW(t)                ((t*)allocate(sizeof(t)))
-#define NEW2(n,t)        ((t*)allocate((unsigned)((n)*sizeof(t))))
-#define REALLOC(p,n)        (realloc((char*)(p),(unsigned)(n)))
+#define CALLOC(k,n)       (calloc((unsigned)(k),(unsigned)(n)))
+#define FREE(x)           (free((char*)(x)))
+#define MALLOC(n)         (malloc((unsigned)(n)))
+#define NEW(t)            ((t*)allocate(sizeof(t)))
+#define NEW2(n,t)         ((t*)allocate((unsigned)((n)*sizeof(t))))
+#define REALLOC(p,n)      (realloc((char*)(p),(unsigned)(n)))
 
 
 /*  the structure of a symbol table entry  */
