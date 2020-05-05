@@ -772,7 +772,7 @@ get_number(void)
     for (c = *cptr; isdigit(c); c = *++cptr)
         n = 10*n + (c - '0');
 
-    return (n);
+    return (Value_t) n;
 }
 
 
@@ -1001,7 +1001,7 @@ initialize_grammar(void)
     plhs[0] = 0;
     plhs[1] = 0;
     plhs[2] = 0;
-    rprec = (short *) MALLOC(maxrules*sizeof(short));
+    rprec = (Value_t *) MALLOC(maxrules*sizeof(Value_t));
     if (rprec == 0) no_space();
     rprec[0] = 0;
     rprec[1] = 0;
@@ -1027,7 +1027,7 @@ expand_rules(void)
     maxrules += 100;
     plhs = (bucket **) REALLOC(plhs, maxrules*sizeof(bucket *));
     if (plhs == 0) no_space();
-    rprec = (short *) REALLOC(rprec, maxrules*sizeof(short));
+    rprec = (Value_t *) REALLOC(rprec, maxrules*sizeof(Value_t));
     if (rprec == 0) no_space();
     rassoc = (char *) REALLOC(rassoc, maxrules*sizeof(char));
     if (rassoc == 0) no_space();
@@ -1498,7 +1498,7 @@ pack_names(void)
 
     name_pool_size = 13;  /* 13 == sizeof("$end") + sizeof("$accept") */
     for (bp = first_symbol; bp; bp = bp->next)
-        name_pool_size += strlen(bp->name) + 1;
+        name_pool_size += (int) (strlen(bp->name) + 1);
     name_pool = MALLOC(name_pool_size);
     if (name_pool == 0) no_space();
 
@@ -1547,14 +1547,14 @@ pack_symbols(void)
         ++nsyms;
         if (bp->class == TERM) ++ntokens;
     }
-    start_symbol = ntokens;
-    nvars = nsyms - ntokens;
+    start_symbol = (Value_t) ntokens;
+    nvars = (Value_t) (nsyms - ntokens);
 
     symbol_name = (char **) MALLOC(nsyms*sizeof(char *));
     if (symbol_name == 0) no_space();
-    symbol_value = (short *) MALLOC(nsyms*sizeof(short));
+    symbol_value = (Value_t *) MALLOC(nsyms*sizeof(Value_t));
     if (symbol_value == 0) no_space();
-    symbol_prec = (short *) MALLOC(nsyms*sizeof(short));
+    symbol_prec = (Value_t *) MALLOC(nsyms*sizeof(Value_t));
     if (symbol_prec == 0) no_space();
     symbol_assoc = MALLOC(nsyms);
     if (symbol_assoc == 0) no_space();
@@ -1566,7 +1566,7 @@ pack_symbols(void)
     v[start_symbol] = 0;
 
     i = 1;
-    j = start_symbol + 1;
+    j = (Value_t) (start_symbol + 1);
     for (bp = first_symbol; bp; bp = bp->next)
     {
         if (bp->class == TERM)
@@ -1579,8 +1579,8 @@ pack_symbols(void)
     for (i = 1; i < ntokens; ++i)
         v[i]->index = i;
 
-    goal->index = start_symbol + 1;
-    k = start_symbol + 2;
+    goal->index = (Index_t) (start_symbol + 1);
+    k = (Value_t) (start_symbol + 2);
     while (++i < nsyms)
         if (v[i] != goal)
         {
@@ -1590,7 +1590,7 @@ pack_symbols(void)
 
     goal->value = 0;
     k = 1;
-    for (i = start_symbol + 1; i < nsyms; ++i)
+    for (i = (Value_t) (start_symbol + 1); i < nsyms; ++i)
     {
         if (v[i] != goal)
         {
@@ -1663,13 +1663,13 @@ pack_grammar(void)
     int i, j;
     int assoc, prec;
 
-    ritem = (short *) MALLOC(nitems*sizeof(short));
+    ritem = (Value_t *) MALLOC(nitems*sizeof(Value_t));
     if (ritem == 0) no_space();
-    rlhs = (short *) MALLOC(nrules*sizeof(short));
+    rlhs = (Value_t *) MALLOC(nrules*sizeof(Value_t));
     if (rlhs == 0) no_space();
-    rrhs = (short *) MALLOC((nrules+1)*sizeof(short));
+    rrhs = (Value_t *) MALLOC((nrules+1)*sizeof(Value_t));
     if (rrhs == 0) no_space();
-    rprec = (short *) REALLOC(rprec, nrules*sizeof(short));
+    rprec = (Value_t *) REALLOC(rprec, nrules*sizeof(Value_t));
     if (rprec == 0) no_space();
     rassoc = REALLOC(rassoc, nrules);
     if (rassoc == 0) no_space();
@@ -1702,7 +1702,7 @@ pack_grammar(void)
             }
             ++j;
         }
-        ritem[j] = -i;
+        ritem[j] = (Value_t) (-i);
         ++j;
         if (rprec[i] == UNDEFINED)
         {
@@ -1732,7 +1732,7 @@ print_grammar(void)
         {
             if (i != 2) fprintf(f, "\n");
             fprintf(f, "%4d  %s :", i - 2, symbol_name[rlhs[i]]);
-            spacing = strlen(symbol_name[rlhs[i]]) + 1;
+            spacing = (int) (strlen(symbol_name[rlhs[i]]) + 1);
         }
         else
         {

@@ -9,10 +9,10 @@ int map_goto(int state, int symbol);
 void initialize_F(void);
 void build_relations(void);
 void add_lookback_edge(int stateno, int ruleno, int gotono);
-short **transpose(short **R, int n);
+Value_t **transpose(Value_t **R, int n);
 void compute_FOLLOWS(void);
 void compute_lookaheads(void);
-void digraph(short **relation);
+void digraph(Value_t **relation);
 void traverse(int i);
 void set_state_table(void);
 void set_accessing_symbol(void);
@@ -24,33 +24,33 @@ void set_maxrhs(void);
 typedef struct shorts
 {
     struct shorts *next;
-    short value;
+    Value_t value;
 }
 shorts;
 
 int tokensetsize;
-short *lookaheads;
-short *LAruleno;
+Value_t *lookaheads;
+Value_t *LAruleno;
 unsigned *LA;
-short *accessing_symbol;
+Value_t *accessing_symbol;
 core **state_table;
 shifts **shift_table;
 reductions **reduction_table;
-short *goto_map;
-short *from_state;
-short *to_state;
+Value_t *goto_map;
+Value_t *from_state;
+Value_t *to_state;
 
-short **transpose();
+Value_t **transpose();
 
 static int infinity;
 static int maxrhs;
 static int ngotos;
 static unsigned *F;
-static short **includes;
+static Value_t **includes;
 static shorts **lookback;
-static short **R;
-static short *INDEX;
-static short *VERTICES;
+static Value_t **R;
+static Value_t *INDEX;
+static Value_t *VERTICES;
 static int top;
 
 void
@@ -88,7 +88,7 @@ set_accessing_symbol(void)
 {
     core *sp;
 
-    accessing_symbol = NEW2(nstates, short);
+    accessing_symbol = NEW2(nstates, Value_t);
     for (sp = first_state; sp; sp = sp->next)
         accessing_symbol[sp->number] = sp->accessing_symbol;
 }
@@ -119,8 +119,8 @@ set_reduction_table(void)
 void
 set_maxrhs(void)
 {
-  short *itemp;
-  short *item_end;
+  Value_t *itemp;
+  Value_t *item_end;
   int length;
   int max;
 
@@ -150,7 +150,7 @@ initialize_LA(void)
     int i, j, k;
     reductions *rp;
     
-    lookaheads = NEW2(nstates + 1, short);
+    lookaheads = NEW2(nstates + 1, Value_t);
     
     k = 0;
     for (i = 0; i < nstates; i++)
@@ -163,7 +163,7 @@ initialize_LA(void)
     lookaheads[nstates] = k;
     
     LA = NEW2(k * tokensetsize, unsigned);
-    LAruleno = NEW2(k, short);
+    LAruleno = NEW2(k, Value_t);
     lookback = NEW2(k, shorts *);
     
     k = 0;
@@ -188,12 +188,12 @@ set_goto_map(void)
     int i;
     int symbol;
     int k;
-    short *temp_map;
+    Value_t *temp_map;
     int state2;
     int state1;
     
-    goto_map = NEW2(nvars + 1, short) - ntokens;
-    temp_map = NEW2(nvars + 1, short) - ntokens;
+    goto_map = NEW2(nvars + 1, Value_t) - ntokens;
+    temp_map = NEW2(nvars + 1, Value_t) - ntokens;
     
     ngotos = 0;
     for (sp = first_shift; sp; sp = sp->next)
@@ -204,7 +204,7 @@ set_goto_map(void)
     
             if (ISTOKEN(symbol)) break;
     
-            if (ngotos == MAXSHORT)
+            if (ngotos == MAXYYINT)
                 fatal("too many gotos");
     
             ngotos++;
@@ -225,8 +225,8 @@ set_goto_map(void)
     goto_map[nsyms] = ngotos;
     temp_map[nsyms] = ngotos;
     
-    from_state = NEW2(ngotos, short);
-    to_state = NEW2(ngotos, short);
+    from_state = NEW2(ngotos, Value_t);
+    to_state = NEW2(ngotos, Value_t);
     
     for (sp = first_shift; sp; sp = sp->next)
     {
@@ -283,10 +283,10 @@ initialize_F(void)
     int j;
     int k;
     shifts *sp;
-    short *edge;
+    Value_t *edge;
     unsigned *rowp;
-    short *rp;
-    short **reads;
+    Value_t *rp;
+    Value_t **reads;
     int nedges;
     int stateno;
     int symbol;
@@ -295,8 +295,8 @@ initialize_F(void)
     nwords = ngotos * tokensetsize;
     F = NEW2(nwords, unsigned);
     
-    reads = NEW2(ngotos, short *);
-    edge = NEW2(ngotos + 1, short);
+    reads = NEW2(ngotos, Value_t *);
+    edge = NEW2(ngotos + 1, Value_t);
     nedges = 0;
     
     rowp = F;
@@ -326,7 +326,7 @@ initialize_F(void)
           
             if (nedges)
             {
-                reads[i] = rp = NEW2(nedges + 1, short);
+                reads[i] = rp = NEW2(nedges + 1, Value_t);
     
                 for (j = 0; j < nedges; j++)
                     rp[j] = edge[j];
@@ -359,8 +359,8 @@ build_relations(void)
     int i;
     int j;
     int k;
-    short *rulep;
-    short *rp;
+    Value_t *rulep;
+    Value_t *rp;
     shifts *sp;
     int length;
     int nedges;
@@ -369,14 +369,14 @@ build_relations(void)
     int stateno;
     int symbol1;
     int symbol2;
-    short *shortp;
-    short *edge;
-    short *states;
-    short **new_includes;
+    Value_t *shortp;
+    Value_t *edge;
+    Value_t *states;
+    Value_t **new_includes;
     
-    includes = NEW2(ngotos, short *);
-    edge = NEW2(ngotos + 1, short);
-    states = NEW2(maxrhs + 1, short);
+    includes = NEW2(ngotos, Value_t *);
+    edge = NEW2(ngotos + 1, Value_t);
+    states = NEW2(maxrhs + 1, Value_t);
     
     for (i = 0; i < ngotos; i++)
     {
@@ -424,7 +424,7 @@ build_relations(void)
     
         if (nedges)
         {
-            includes[i] = shortp = NEW2(nedges + 1, short);
+            includes[i] = shortp = NEW2(nedges + 1, Value_t);
             for (j = 0; j < nedges; j++)
                 shortp[j] = edge[j];
             shortp[nedges] = -1;
@@ -472,17 +472,17 @@ add_lookback_edge(int stateno, int ruleno, int gotono)
 
 
 
-short **
-transpose(short* *R, int n)
+Value_t **
+transpose(Value_t* *R, int n)
 {
-    short **new_R;
-    short **temp_R;
-    short *nedges;
-    short *sp;
+    Value_t **new_R;
+    Value_t **temp_R;
+    Value_t *nedges;
+    Value_t *sp;
     int i;
     int k;
     
-    nedges = NEW2(n, short);
+    nedges = NEW2(n, Value_t);
     
     for (i = 0; i < n; i++)
     {
@@ -494,15 +494,15 @@ transpose(short* *R, int n)
         }
     }
     
-    new_R = NEW2(n, short *);
-    temp_R = NEW2(n, short *);
+    new_R = NEW2(n, Value_t *);
+    temp_R = NEW2(n, Value_t *);
     
     for (i = 0; i < n; i++)
     {
         k = nedges[i];
         if (k > 0)
         {
-            sp = NEW2(k + 1, short);
+            sp = NEW2(k + 1, Value_t);
             new_R[i] = sp;
             temp_R[i] = sp;
             sp[k] = -1;
@@ -569,13 +569,13 @@ compute_lookaheads(void)
 }
 
 void
-digraph(short* *relation)
+digraph(Value_t* *relation)
 {
     int i;
     
     infinity = ngotos + 2;
-    INDEX = NEW2(ngotos + 1, short);
-    VERTICES = NEW2(ngotos + 1, short);
+    INDEX = NEW2(ngotos + 1, Value_t);
+    VERTICES = NEW2(ngotos + 1, Value_t);
     top = 0;
     
     R = relation;
@@ -601,7 +601,7 @@ traverse(int i)
     unsigned *fp2;
     unsigned *fp3;
     int j;
-    short *rp;
+    Value_t *rp;
     
     int height;
     unsigned *base;

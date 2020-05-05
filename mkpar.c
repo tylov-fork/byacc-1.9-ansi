@@ -7,12 +7,12 @@
 action **parser;
 int SRtotal;
 int RRtotal;
-short *SRconflicts;
-short *RRconflicts;
-short *defred;
-short *rules_used;
-short nunused;
-short final_state;
+Value_t *SRconflicts;
+Value_t *RRconflicts;
+Value_t *defred;
+Value_t *rules_used;
+Value_t nunused;
+Value_t final_state;
 
 static int SRcount;
 static int RRcount;
@@ -62,7 +62,7 @@ get_shifts(int stateno)
 {
     action *actions, *temp;
     shifts *sp;
-    short *to_state;
+    Value_t *to_state;
     int i, k;
     int symbol;
 
@@ -71,7 +71,7 @@ get_shifts(int stateno)
     if (sp)
     {
         to_state = sp->shift;
-        for (i = sp->nshifts - 1; i >= 0; i--)
+        for (i = (Value_t) (sp->nshifts - 1); i >= 0; i--)
         {
             k = to_state[i];
             symbol = accessing_symbol[k];
@@ -157,7 +157,7 @@ void
 find_final_state(void)
 {
     int goal, i;
-    short *to_state;
+    Value_t *to_state;
     shifts *p;
 
     p = shift_table[0];
@@ -176,7 +176,7 @@ unused_rules(void)
     int i;
     action *p;
 
-    rules_used = (short *) MALLOC(nrules*sizeof(short));
+    rules_used = (Value_t *) MALLOC(nrules*sizeof(Value_t));
     if (rules_used == 0) no_space();
 
     for (i = 0; i < nrules; ++i)
@@ -212,8 +212,8 @@ remove_conflicts(void)
 
     SRtotal = 0;
     RRtotal = 0;
-    SRconflicts = NEW2(nstates, short);
-    RRconflicts = NEW2(nstates, short);
+    SRconflicts = NEW2(nstates, Value_t);
+    RRconflicts = NEW2(nstates, Value_t);
     for (i = 0; i < nstates; i++)
     {
         SRcount = 0;
@@ -331,7 +331,7 @@ defreds(void)
 {
     int i;
 
-    defred = NEW2(nstates, short);
+    defred = NEW2(nstates, Value_t);
     for (i = 0; i < nstates; i++)
         defred[i] = sole_reduction(i);
 }

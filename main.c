@@ -52,22 +52,22 @@ int nsyms;
 int ntokens;
 int nvars;
 
-int   start_symbol;
-char  **symbol_name;
-short *symbol_value;
-short *symbol_prec;
-char  *symbol_assoc;
+Value_t  start_symbol;
+char   **symbol_name;
+Value_t *symbol_value;
+Value_t *symbol_prec;
+char    *symbol_assoc;
 
-short *ritem;
-short *rlhs;
-short *rrhs;
-short *rprec;
+Value_t *ritem;
+Value_t *rlhs;
+Value_t *rrhs;
+Value_t *rprec;
 char  *rassoc;
-short **derives;
+Value_t **derives;
 char *nullable;
 
-extern char *mktemp();
-extern char *getenv();
+extern char *mktemp(char* templ);
+extern char *getenv(const char *name);
 
 void
 done(int k)
@@ -229,12 +229,13 @@ allocate(unsigned n)
 void
 create_file_names(void)
 {
-    int i, len;
+    size_t i, len;
     char *tmpdir;
 
-    tmpdir = getenv("TMPDIR");
-    if (tmpdir == 0) tmpdir = getenv("TEMP");
-    if (tmpdir == 0) tmpdir = "/tmp";
+    if (!(tmpdir = getenv("TMP")))
+        if (!(tmpdir = getenv("TMPDIR")))
+            if (!(tmpdir = getenv("TEMP")))
+                tmpdir = "/tmp";
 
     len = strlen(tmpdir);
     i = len + 13;

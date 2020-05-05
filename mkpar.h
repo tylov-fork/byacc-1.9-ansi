@@ -3,12 +3,12 @@
 extern action **parser;
 extern int SRtotal;
 extern int RRtotal;
-extern short *SRconflicts;
-extern short *RRconflicts;
-extern short *defred;
-extern short *rules_used;
-extern short nunused;
-extern short final_state;
+extern Value_t *SRconflicts;
+extern Value_t *RRconflicts;
+extern Value_t *defred;
+extern Value_t *rules_used;
+extern Value_t nunused;
+extern Value_t final_state;
 
 extern void make_parser(void);
 extern void free_parser(void);

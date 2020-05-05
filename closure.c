@@ -2,8 +2,8 @@
 #include "warshall.h"
 #include "closure.h"
 
-short *itemset;
-short *itemsetend;
+Value_t *itemset;
+Value_t *itemsetend;
 unsigned *ruleset;
 
 static unsigned *first_derives;
@@ -14,7 +14,7 @@ set_EFF(void)
 {
     unsigned *row;
     int symbol;
-    short *sp;
+    Value_t *sp;
     int rowsize;
     int i;
     int rule;
@@ -53,7 +53,7 @@ set_first_derives(void)
     int j;
     unsigned k;
     unsigned cword;
-    short *rp;
+    Value_t *rp;
 
     int rule;
     int i;
@@ -101,17 +101,17 @@ set_first_derives(void)
 }
 
 void
-closure(short *nucleus, int n)
+closure(Value_t *nucleus, int n)
 {
     int ruleno;
     unsigned word;
     unsigned i;
-    short *csp;
+    Value_t *csp;
     unsigned *dsp;
     unsigned *rsp;
     int rulesetsize;
 
-    short *csend;
+    Value_t *csend;
     unsigned *rsend;
     int symbol;
     int itemno;
@@ -181,7 +181,7 @@ finalize_closure(void)
 void
 print_closure(int n)
 {
-  short *isp;
+  Value_t *isp;
 
   printf("\n\nn = %d\n\n", n);
   for (isp = itemset; isp < itemsetend; isp++)

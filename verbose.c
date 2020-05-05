@@ -5,7 +5,7 @@
 #include "mkpar.h"
 #include "verbose.h"
 
-static short *null_rules;
+static Value_t *null_rules;
 
 void
 verbose(void)
@@ -14,7 +14,7 @@ verbose(void)
 
     if (!vflag) return;
 
-    null_rules = (short *) MALLOC(nrules*sizeof(short));
+    null_rules = (Value_t *) MALLOC(nrules*sizeof(Value_t));
     if (null_rules == 0) no_space();
     fprintf(verbose_file, "\f\n");
     for (i = 0; i < nstates; i++)
@@ -35,7 +35,7 @@ void
 log_unused(void)
 {
     int i;
-    short *p;
+    Value_t *p;
 
     fprintf(verbose_file, "\n\nRules never reduced:\n");
     for (i = 3; i < nrules; ++i)
@@ -145,8 +145,8 @@ print_core(int state)
     int k;
     int rule;
     core *statep;
-    short *sp;
-    short *sp1;
+    Value_t *sp;
+    Value_t *sp1;
 
     statep = state_table[state];
     k = statep->nitems;
@@ -307,7 +307,7 @@ print_gotos(int stateno)
 {
     int i, k;
     int as;
-    short *to_state;
+    Value_t *to_state;
     shifts *sp;
 
     putc('\n', verbose_file);
