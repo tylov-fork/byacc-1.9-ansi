@@ -104,7 +104,21 @@ set_signals(void)
 void
 usage(void)
 {
-    fprintf(stderr, "usage: %s [-dlrtv] [-b file_prefix] [-p symbol_prefix] filename\n", myname);
+   static const char *msg[] =
+    {
+        "  -d                    write definitions (" DEFINES_SUFFIX ")",
+        "  -l                    suppress #line directives",
+        "  -r                    produce separate code and table files (y.code.c)",
+        "  -t                    add debugging support",
+        "  -v                    write description (y.output)",
+        "  -b file_prefix        set filename prefix (default \"y.\")",
+        "  -p symbol_prefix      set symbol prefix (default \"yy\")",
+    };
+    unsigned n;  
+    fprintf(stderr, "Berkeley Yacc v1.9a\n");
+    fprintf(stderr, "Usage: %s [-dlrtv] [-b file_prefix] [-p symbol_prefix] filename\n", myname);
+    for (n = 0; n < sizeof(msg) / sizeof(msg[0]); ++n)
+        fprintf(stderr, "%s\n", msg[n]);
     exit(1);
 }
 
